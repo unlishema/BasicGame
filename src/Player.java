@@ -14,16 +14,16 @@ public class Player extends GameObject {
 	private final World world;
 	private final PApplet app;
 
-	private float friction = 0.75f, speed = Player.GLOBAL_SPEED / 60.0f, jumpForce = 7.75f;
+	private float friction = 0.75f, speed = Player.GLOBAL_SPEED / 60.0f, jumpForce = 6.5f;
 
 	protected final FirstPersonCamera camera;
 
 	protected PVector velocity;
-	protected boolean onGround = false, isJumping = false, isFlying = false, isClipping = false;
+	protected boolean onGround = false, isFlying = false, isClipping = false;
 
 	public Player(final PApplet app, final World world) {
-		super(Player.STARTING_POSITION, new Dimensions(0.75f, 2.0f, 0.5f));
-		// FIXME Find out how to position turn the Camera myself
+		super(Player.STARTING_POSITION, new Dimensions(0.75f, 1.75f, 0.5f));
+		// FIXME SOON!! Find out how to position turn the Camera myself
 		this.app = app;
 		this.world = world;
 		this.camera = new FirstPersonCamera(this.app, this);
@@ -57,15 +57,15 @@ public class Player extends GameObject {
 		// Jump Key
 		if (!this.isFlying() && this.onGround && skh.isKeyPressed(' ')) {
 			this.onGround = false;
-			if (!this.isJumping) this.velocity.y += -this.jumpForce * (1.0f / 60.0f);
-			this.isJumping = true;
+			if (this.velocity.y == 0.0f) this.velocity.y += -this.jumpForce * (1.0f / 60.0f);
 		}
 
 		// Crouch Key
 		if (!this.isFlying() && this.onGround && skh.isKeyPressed(SimpleKeyHandler.ModifierKey.SHIFT)) {
 			// FIXME Add this in.... hmmm how to do this.... lol... just a lot of checking
 			// to do i think. need to do same as block collision almost
-
+			// Flip a Boolean here and actual checks will be below when we update player
+			// position
 		}
 
 		// Fly Up and Down
@@ -83,47 +83,48 @@ public class Player extends GameObject {
 
 		// Calculate Collisions
 		final boolean[] collisions = this.world.collidesWith(this, new PVector(0.0f, 0.0f, 0.0f));
-		if (!this.isClipping && GameObject.collidesWithAny(collisions)) {
+		if (!this.isClipping) {
 			// Calculate When Player Hits a Ceiling
 			if (collisions[Collisions.CEIL]) {
-				System.out.println("Player Hit Ceiling!");
+				this.position.y = (float) Math.ceil(this.position.y);
+				if (this.velocity.y < 0.00001f) this.velocity.y = 0.0f;
 			}
 
 			// Calculate When Player Hits a Wall in X Coordinate
 			if (collisions[Collisions.LEFT] && this.velocity.x > 0.0f) {
-				System.out.println("Player Hit Left Wall!");
 				this.velocity.x = 0.0f;
-				this.position.x = ((int) this.position.x) + (1.0f - this.size.width) / 2;
+				this.position.x = Math.round(this.position.x) + (1.0f - this.size.width) / 2;
 			} else if (collisions[Collisions.RIGHT] && this.velocity.x < 0.0f) {
-				System.out.println("Player Hit Right Wall!");
 				this.velocity.x = 0.0f;
-				this.position.x = ((int) this.position.x) - (1.0f - this.size.width) / 2;
+				this.position.x = Math.round(this.position.x) - (1.0f - this.size.width) / 2;
 			}
 
 			// Calculate When Player Hits a Wall in Z Coordinate
 			if (collisions[Collisions.FRONT] && this.velocity.z < 0.0f) {
-				System.out.println("Player Hit Front Wall!");
 				this.velocity.z = 0.0f;
-				this.position.z = ((int) this.position.z) - (1.0f - this.size.depth) / 2;
+				this.position.z = Math.round(this.position.z) - (1.0f - this.size.depth) / 2;
 			} else if (collisions[Collisions.BACK] && this.velocity.z > 0.0f) {
-				System.out.println("Player Hit Back Wall!");
 				this.velocity.z = 0.0f;
-				this.position.z = ((int) this.position.z) + (1.0f - this.size.depth) / 2;
+				this.position.z = Math.round(this.position.z) + (1.0f - this.size.depth) / 2;
 			}
 
-			// Calculate Gravity and When Player Falls to Ground
-			if (!this.onGround && !this.isJumping && collisions[Collisions.FLOOR]) {
-				System.out.println("Player Hit Floor!");
-				if (!this.isFlying()) this.onGround = true;
-				// TODO If you fall too far & gain too much velocity then you will die on impact
+			// When Player Hits the Ground
+			if (!this.onGround && collisions[Collisions.FLOOR]) {
+				// NOTICE If you fall to Far & Fast you should die on impact
 				if (this.velocity.y > 0.35f) System.out.println("You should be dead but a Diety saved your life!");
-				this.position.y = (float) Math.floor(this.position.y);
-				if (this.velocity.y > 0.0f) this.velocity.y = 0.0f;
+				if (this.velocity.y > -0.0001f) {
+					if (!this.isFlying()) this.onGround = true;
+					this.velocity.y = 0.0f;
+					this.position.y = (float) (Math.floor(this.position.y) + (2.0f - this.size.height) / 2);
+				}
+			} else if (this.onGround && !collisions[Collisions.FLOOR]) {
+				this.onGround = false;
 			}
-		} else if (!this.isFlying() && !collisions[Collisions.FLOOR]) { // Deal With Gravity
+		}
+
+		// Apply Gravity
+		if (!this.isFlying() && !this.onGround) { // Deal With Gravity
 			this.velocity.add(new PVector(0.0f, this.world.gravity * (1.0f / 60.0f), 0.0f));
-			this.onGround = false;
-			if (this.velocity.y > 0.0f && this.isJumping) this.isJumping = false;
 		} else { // Friction on
 			this.velocity.y *= this.friction;
 		}

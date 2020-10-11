@@ -8,18 +8,13 @@ public class World extends GameObject {
 	private final PApplet app;
 	protected Player player;
 	private final Map map;
-	// FIXME Change from using a node to using a map full of nodes
 
-	protected final float gravity = 0.33f;
+	protected final float gravity = 0.26f;
 
 	public World(final PApplet app) {
 		this.app = app;
 		this.map = new Map(app);
 		this.player = new Player(this.app, this);
-	}
-
-	public float getGroundLevel(final PVector position) {
-		return this.map.calculateGroundLevel(position);
 	}
 
 	@Override

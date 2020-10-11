@@ -1,5 +1,4 @@
 
-
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
@@ -14,7 +13,7 @@ public class AssetLoader extends GameObject {
 		this.app = app;
 		// TODO Load Assets Here
 	}
-	
+
 	public void close() {
 		// TODO Unload Assets Here
 	}
@@ -30,6 +29,7 @@ public class AssetLoader extends GameObject {
 		// Set Perspective and Background for Loading Screen
 		g.ortho();
 		g.background(0);
+		// TODO Load in a background image
 
 		// Setup Font
 		g.textSize(41);

@@ -4,7 +4,7 @@ import processing.core.PVector;
 
 public abstract class GameObject {
 
-	public static interface Collisions { // FIXME Should I change to a Flag System???
+	public static interface Collisions {
 		public static final int LEFT = 0;
 		public static final int RIGHT = 1;
 		public static final int FLOOR = 2;
@@ -29,19 +29,24 @@ public abstract class GameObject {
 
 	public static final boolean collidesWithAny(final boolean[] collisions) {
 		boolean collide = false;
-		for (final boolean c : collisions) if (!collide && c) collide = c;
+		for (final boolean c : collisions)
+			if (!collide && c)
+				collide = c;
 		return collide;
 	}
 
 	public static final boolean collidesWithAll(final boolean[] collisions) {
 		boolean collide = true;
-		for (final boolean c : collisions) if (collide && !c) collide = c;
+		for (final boolean c : collisions)
+			if (collide && !c)
+				collide = c;
 		return collide;
 	}
 
 	public boolean[] collidesWith(final GameObject obj, final PVector padding) {
 		// If this Object was not properly defined then auto return false
-		if (!this.hasBoundaryBox()) return null;
+		if (!this.hasBoundaryBox())
+			return null;
 
 		// Get the Min and Max Position of First Object (A)
 		final PVector minA = new PVector(this.position.x - this.size.width / 2, this.position.y - this.size.height / 2,
@@ -55,25 +60,23 @@ public abstract class GameObject {
 		final PVector maxB = new PVector(obj.position.x - padding.x + obj.size.width / 2,
 				obj.position.y - padding.y + obj.size.height / 2, obj.position.z - padding.z + obj.size.depth / 2);
 
-		// FIXME Make it look better
-
 		// X Collision
 		final boolean xPos = this.position.x <= minB.x && minB.x <= maxA.x; // Right
 		final boolean xNeg = this.position.x >= maxB.x && maxB.x >= minA.x; // Left
-		final boolean xAny = (minA.x <= minB.x && minB.x <= maxA.x) || (minA.x <= maxB.x && maxB.x <= maxA.x)
-				|| (minB.x <= minA.x && minA.x <= maxB.x) || (minB.x <= maxA.x && maxA.x <= maxB.x);
-		
+		final boolean xAny = (minA.x < minB.x && minB.x < maxA.x) || (minA.x < maxB.x && maxB.x < maxA.x)
+				|| (minB.x < minA.x && minA.x < maxB.x) || (minB.x < maxA.x && maxA.x < maxB.x);
+
 		// Y Collision
-		final boolean yNeg = maxB.y <= this.position.y && maxB.y >= minA.y; // Floor
-		final boolean yPos = this.position.y <= minB.y && maxA.y >= minB.y; // Ceiling
+		final boolean yNeg = this.position.y >= maxB.y && maxB.y >= minA.y; // Floor
+		final boolean yPos = this.position.y < minB.y && minB.y < maxA.y; // Ceiling
 		final boolean yAny = (minA.y <= minB.y && minB.y <= maxA.y) || (minA.y <= maxB.y && maxB.y <= maxA.y)
 				|| (minB.y <= minA.y && minA.y <= maxB.y) || (minB.y <= maxA.y && maxA.y <= maxB.y);
-		
+
 		// Z Collision
 		final boolean zPos = this.position.z <= minB.z && maxA.z >= minB.z; // Front
-		final boolean zNeg = maxB.z <= this.position.z && maxB.z >= minA.z; // Back
-		final boolean zAny = (minA.z <= minB.z && minB.z <= maxA.z) || (minA.z <= maxB.z && maxB.z <= maxA.z)
-				|| (minB.z <= minA.z && minA.z <= maxB.z) || (minB.z <= maxA.z && maxA.z <= maxB.z);
+		final boolean zNeg = this.position.z >= maxB.z && maxB.z >= minA.z; // Back
+		final boolean zAny = (minA.z < minB.z && minB.z < maxA.z) || (minA.z < maxB.z && maxB.z < maxA.z)
+				|| (minB.z < minA.z && minA.z < maxB.z) || (minB.z < maxA.z && maxA.z < maxB.z);
 
 		// Returns a Boolean[] { Left, Right, Floor, Ceiling, Front, Back }
 		boolean[] collisions = new boolean[6];
@@ -100,9 +103,6 @@ public abstract class GameObject {
 	public void draw(final PGraphics g) {
 		// Call their internal Draw command
 		this.redraw(g);
-
-		// TODO Make sure the Player Boundary Box is Drawn Correctly since it is 0.25
-		// height one way and 0.75 the other way
 
 		// Draw Boundary Box
 		if (GameObject.DRAW_BOUNDARIES && this.hasBoundaryBox()) {
