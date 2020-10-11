@@ -1,0 +1,54 @@
+{
+  "files": [
+    {
+      "file": "GameLauncher.jar",
+      "action": "stable",
+      "lastModified": 1601544133307
+    },
+    {
+      "file": "launcher.config",
+      "action": "stable",
+      "lastModified": 1601544133307
+    },
+    {
+      "file": "BasicGame.jar",
+      "action": "create",
+      "lastModified": 1601544133307
+    },
+    {
+      "file": "Data",
+      "action": "create",
+      "lastModified": 1601283520740
+    },
+    {
+      "file": "Data\\grass.jpg",
+      "action": "create",
+      "lastModified": 1600769525090
+    },
+    {
+      "file": "Data\\grass_old.jpg",
+      "action": "create",
+      "lastModified": 1600768747414
+    },
+    {
+      "file": "Data\\terrain.png",
+      "action": "create",
+      "lastModified": 1600924302011
+    },
+    {
+      "file": "Data\\terrain2.png",
+      "action": "create",
+      "lastModified": 1600924302755
+    },
+    {
+      "file": "Data\\terrain3.png",
+      "action": "create",
+      "lastModified": 1600924302659
+    },
+    {
+      "file": "Data\\VCR48.vlw",
+      "action": "create",
+      "lastModified": 1600924302622
+    }
+  ]
+}

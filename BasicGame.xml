@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project BasicGame">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="C:/Users/Unlishema/java_workspace"/>
+    <property name="dir.jarfile" value="${dir.buildfile}"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/BasicGame.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="Main"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${dir.jarfile}/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/core.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/gluegen-rt-natives-linux-aarch64.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/gluegen-rt-natives-linux-amd64.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/gluegen-rt-natives-linux-armv6hf.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/gluegen-rt-natives-linux-i586.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/gluegen-rt-natives-macosx-universal.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/gluegen-rt-natives-windows-amd64.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/gluegen-rt-natives-windows-i586.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/gluegen-rt.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/jogl-all-natives-linux-aarch64.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/jogl-all-natives-linux-amd64.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/jogl-all-natives-linux-armv6hf.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/jogl-all-natives-linux-i586.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/jogl-all-natives-macosx-universal.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/jogl-all-natives-windows-amd64.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/jogl-all-natives-windows-i586.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/jogl-all.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/vecmath-1.5.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/Libraries/SimpleKeyHandler.jar"/>
+        </jar>
+    </target>
+</project>
