@@ -1,6 +1,7 @@
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.core.PVector;
 
 public class GameGUI extends GameObject {
 
@@ -48,7 +49,7 @@ public class GameGUI extends GameObject {
 		g.ortho();
 		g.translate(-this.app.width / 2, -this.app.height / 2);
 
-		// Create a new Style just for menu
+		// Create a new Style just for the menu
 		g.pushStyle();
 
 		// Draw Crosshairs
@@ -62,19 +63,24 @@ public class GameGUI extends GameObject {
 		// Draw Debug
 		if (!this.menuOpen && this.drawDebug) {
 			int y = -8;
+
+			// Setup Style
 			g.stroke(0);
+			g.strokeWeight(1);
+			g.textSize(12);
 			g.textAlign(PGraphics.LEFT, PGraphics.TOP);
 
 			// Draw Shortcuts
 			g.fill(255);
 			g.text("Esc: Open Menu (Simple But Efficent)", 10, y += 18);
-			g.text("R: Reset Player Position", 10, y += 18);
-			this.toggleRedGreen(g, this.world.player.isFlying());
-			g.text("F: Toggle Flying (" + this.world.player.isFlying() + ")", 10, y += 18);
+			g.text("F3: Toggle Debug", 10, y += 18);
+			g.text("F3 + R: Reset Player Position", 10, y += 18);
+			this.toggleRedGreen(g, GameObject.DRAW_BOUNDARIES);
+			g.text("F3 + B: Toggle Draw Boundaries (" + GameObject.DRAW_BOUNDARIES + ")", 10, y += 18);
 			this.toggleRedGreen(g, this.world.player.isClipping);
-			g.text("C: Toggle Clipping (" + this.world.player.isClipping + ")", 10, y += 18);
-			this.toggleRedGreen(g, Player.DRAW_BOUNDARIES);
-			g.text("B: Toggle Draw Boundaries (" + Player.DRAW_BOUNDARIES + ")", 10, y += 18);
+			g.text("F3 + C: Toggle Clipping (" + this.world.player.isClipping + ")", 10, y += 18);
+			this.toggleRedGreen(g, this.world.player.isFlying);
+			g.text("F: Toggle Flying (" + this.world.player.isFlying + ")", 10, y += 18);
 			this.toggleRedGreen(g, this.world.player.onGround);
 			g.text("On Ground: (" + this.world.player.onGround + ")", 10, y += 18);
 
@@ -87,7 +93,7 @@ public class GameGUI extends GameObject {
 
 			// Build X Position
 			sb.append("X: ");
-			sb.append(String.format("%.02f", this.world.player.position.x));
+			sb.append(String.format("%.04f", this.world.player.position.x));
 			sb.append(" (V:");
 			sb.append(String.format("%.02f", this.world.player.velocity.x));
 			sb.append(")");
@@ -96,7 +102,7 @@ public class GameGUI extends GameObject {
 			// Build Y Position
 			sb.setLength(0);
 			sb.append("Y: ");
-			sb.append(String.format("%.02f", this.world.player.position.y));
+			sb.append(String.format("%.04f", this.world.player.position.y));
 			sb.append(" (V:");
 			sb.append(String.format("%.02f", this.world.player.velocity.y));
 			sb.append(")");
@@ -105,20 +111,21 @@ public class GameGUI extends GameObject {
 			// Build Z Position
 			sb.setLength(0);
 			sb.append("Z: ");
-			sb.append(String.format("%.02f", this.world.player.position.z));
+			sb.append(String.format("%.04f", this.world.player.position.z));
 			sb.append(" (V:");
 			sb.append(String.format("%.02f", this.world.player.velocity.z));
 			sb.append(")");
 			g.text(sb.toString(), 20, y += 18);
 
-			// Build Look Vector
+			// Build Looking at Vector
+			final PVector lookingAt = this.world.getLookingAt(this.world.player);
 			sb.setLength(0);
-			sb.append("Look: ");
-			sb.append(String.format("%.02f", this.world.player.camera.look.x));
+			sb.append("Looking At: ");
+			sb.append(String.format("%.02f", lookingAt != null ? lookingAt.x : 0.0f));
 			sb.append(",");
-			sb.append(String.format("%.02f", this.world.player.camera.look.y));
+			sb.append(String.format("%.02f", lookingAt != null ? lookingAt.y : 0.0f));
 			sb.append(",");
-			sb.append(String.format("%.02f", this.world.player.camera.look.z));
+			sb.append(String.format("%.02f", lookingAt != null ? lookingAt.z : 0.0f));
 			g.text(sb.toString(), 20, y += 18);
 		} else if (this.menuOpen) { // Draw Menu
 			this.resumeBtn.draw(g);

@@ -12,35 +12,23 @@ public class FirstPersonCamera extends GameObject {
 	private final Player player;
 
 	private Robot robot = null;
-	protected PVector look = new PVector(0f, 0.5f, 1f);
 	private PVector center;
 	private Point mouse;
-	private float sensitivity = 0.15f, tilt, pan;
-
-	protected PVector up = new PVector(0f, 1f, 0f);
-	protected PVector right = new PVector(1f, 0f, 0f);
-	protected PVector forward = new PVector(0f, 0f, 1f);
+	private float sensitivity = 0.15f;
 	protected boolean isMouseFocused = true;
 
 	public FirstPersonCamera(final PApplet app, final Player player) {
+		super(new PVector(0.0f, 0.0f, 0.0f), new Dimensions(0.0f, 0.0f, 0.0f));
 		this.app = app;
 		this.player = player;
 		try {
 			this.robot = new Robot();
 		} catch (final AWTException e) {}
 
-		this.pan = 0;
-		this.tilt = 0f;
-
 		this.app.perspective(PConstants.PI / 3f, (float) this.app.width / (float) this.app.height, 0.01f, 1000f);
 
+		this.centerMouse();
 		this.update();
-	}
-
-	private float clamp(float x, float min, float max) {
-		if (x > max) return max;
-		if (x < min) return min;
-		return x;
 	}
 
 	public void centerMouse() {
@@ -54,6 +42,10 @@ public class FirstPersonCamera extends GameObject {
 
 	// Update the Camera Position
 	public void update() {
+		// Update Camera Position based on Player Position
+		this.position.set(this.player.getPosition().x,
+				this.player.getPosition().y - this.player.getSize().height * 0.375f, this.player.getPosition().z);
+
 		// Get Fake (Java) Mouse Position
 		this.mouse = MouseInfo.getPointerInfo().getLocation();
 
@@ -74,40 +66,26 @@ public class FirstPersonCamera extends GameObject {
 			this.centerMouse();
 
 			// Adjust the Pan & Tilt of the Screen
-			this.pan += PApplet.map(deltaX, 0, this.app.width, 0, PConstants.TWO_PI) * this.sensitivity;
-			this.tilt += PApplet.map(deltaY, 0, this.app.height, 0, PConstants.PI) * this.sensitivity;
-		} else {
-			// Set to Mouse on Screen
-			this.app.cursor();
+			this.player.pan += PApplet.map(deltaX, 0, this.app.width, 0, PConstants.TWO_PI) * this.sensitivity;
+			this.player.tilt += PApplet.map(deltaY, 0, this.app.height, 0, PConstants.PI) * this.sensitivity;
 		}
 
-		// Lets make sure we only Tilt so far
-		this.tilt = this.clamp(this.tilt, -PConstants.PI / 2.01f, PConstants.PI / 2.01f);
-
-		// Hmm what is this for???
-		if (this.tilt == PConstants.PI / 2) this.tilt += 0.001f;
-
-		// Adjust Forward Vector
-		this.forward = new PVector(PApplet.cos(this.pan), 0, PApplet.sin(this.pan));
-		this.forward.normalize();
-
-		// Adjust the Look Vector
-		this.look = new PVector(PApplet.cos(this.pan), PApplet.tan(this.tilt), PApplet.sin(this.pan));
-		this.look.normalize();
-
-		// Adjust the Right Vector
-		this.right = new PVector(PApplet.cos(this.pan - PConstants.PI / 2), 0,
-				PApplet.sin(this.pan - PConstants.PI / 2));
-		this.right.normalize();
+		// Checks to Make sure Player cannot break the camera
+		if (this.position.x > Float.MAX_VALUE) this.position.set(Float.MAX_VALUE, this.position.y, this.position.z);
+		if (this.position.x < -Float.MAX_VALUE) this.position.set(-Float.MAX_VALUE, this.position.y, this.position.z);
+		if (this.position.y > Float.MAX_VALUE) this.position.set(this.position.x, Float.MAX_VALUE, this.position.z);
+		if (this.position.y < -Float.MAX_VALUE) this.position.set(this.position.x, -Float.MAX_VALUE, this.position.z);
+		if (this.position.z > Float.MAX_VALUE) this.position.set(this.position.x, this.position.y, Float.MAX_VALUE);
+		if (this.position.z < -Float.MAX_VALUE) this.position.set(this.position.x, this.position.y, -Float.MAX_VALUE);
 
 		// Adjust the Center
-		this.center = PVector.add(this.player.position, this.look);
+		this.center = PVector.add(this.position, this.player.look);
 
 	}
 
 	@Override
 	protected void redraw(final PGraphics g) {
-		g.camera(this.player.position.x, this.player.position.y - this.player.size.height * 0.375f,
-				this.player.position.z, this.center.x, this.center.y, this.center.z, this.up.x, this.up.y, this.up.z);
+		g.camera(this.position.x, this.position.y, this.position.z, this.center.x, this.center.y, this.center.z,
+				this.player.up.x, this.player.up.y, this.player.up.z);
 	}
 }

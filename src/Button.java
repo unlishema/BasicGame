@@ -25,6 +25,10 @@ public abstract class Button extends GameObject {
 	protected void redraw(final PGraphics g) {
 		g.pushMatrix();
 
+		// Setup Style
+		g.stroke(0);
+		g.strokeWeight(1);
+		
 		// Draw the Button Background
 		g.fill(35, 35, 35, 150);
 		g.rect(this.rect.x, this.rect.y, this.rect.width, this.rect.height);
