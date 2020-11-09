@@ -8,6 +8,7 @@ import processing.core.PVector;
 import processing.opengl.PGraphicsOpenGL;
 
 public class BasicGame extends PApplet {
+	// FIXME !!!!!!!!!!!!!!!!!NOW!!!!!!!!!!!!!!!! Adjust Collidable to be Java 7 compliant
 	protected SimpleKeyHandler skh = new SimpleKeyHandler(this);
 	protected World world;
 	protected AssetManager assetManager;

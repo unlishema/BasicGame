@@ -103,7 +103,9 @@ public class Region extends GameObject implements Collidable {
 					if (node != null && node.isSolid()) {
 						Node tempNode = null;
 						final boolean[] n = new boolean[6];
-						// FIXME Make adjustments to take into account nodes in other regions
+						// FIXME !!NOW!! Make adjustments to take into account nodes in other regions
+						// Should be as simple as this.map.getNode(x, y, z) but take into account its
+						// world coordinates not region
 						n[Collidable.LEFT] = (tempNode = this.getNode(x, y, z + 1)) != null && tempNode.isSolid();
 						n[Collidable.RIGHT] = (tempNode = this.getNode(x, y, z - 1)) != null && tempNode.isSolid();
 						n[Collidable.FLOOR] = (tempNode = this.getNode(x, y - 1, z)) != null && tempNode.isSolid();
