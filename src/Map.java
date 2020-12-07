@@ -142,6 +142,20 @@ public class Map extends GameObject implements Collidable {
 		return mapCollisions;
 	}
 
+  @Override
+  public boolean contains(final PVector vector) {
+    // Get the Min and Max Position of this Collidable
+    final PVector min = new PVector(this.getPosition().x - this.getSize().width / 2,
+        this.getPosition().y - this.getSize().height / 2, this.getPosition().z - this.getSize().depth / 2);
+    final PVector max = new PVector(this.getPosition().x + this.getSize().width / 2,
+        this.getPosition().y + this.getSize().height / 2, this.getPosition().z + this.getSize().depth / 2);
+
+    final boolean xAny = min.x <= vector.x && vector.x <= max.x;
+    final boolean yAny = min.y <= vector.y && vector.y <= max.y;
+    final boolean zAny = min.z <= vector.x && vector.x <= max.z;
+    return xAny && yAny && zAny;
+  }
+
 	@Override
 	public PVector getPosition() {
 		return this.position;

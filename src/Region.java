@@ -132,6 +132,11 @@ public class Region extends GameObject implements Collidable {
 		return null;
 	}
 
+  @Override
+  public boolean contains(final PVector vector) {
+    return false;
+  }
+
 	/*
 	 * (non-Javadoc)
 	 * @see Collidable#getPosition()
