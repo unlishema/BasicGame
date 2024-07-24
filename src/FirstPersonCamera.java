@@ -1,11 +1,12 @@
+import java.awt.AWTException;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Robot;
 
-import com.jogamp.newt.opengl.GLWindow;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PVector;
-
-import java.awt.*;
 
 public class FirstPersonCamera extends GameObject {
 	private final PApplet app;
@@ -23,7 +24,8 @@ public class FirstPersonCamera extends GameObject {
 		this.player = player;
 		try {
 			this.robot = new Robot();
-		} catch (final AWTException e) {}
+		} catch (final AWTException e) {
+		}
 
 		this.app.perspective(PConstants.PI / 3f, (float) this.app.width / (float) this.app.height, 0.01f, 1000f);
 
@@ -33,8 +35,8 @@ public class FirstPersonCamera extends GameObject {
 
 	public void centerMouse() {
 		// Get the Real Mouse Location
-		int x = ((GLWindow) this.app.getSurface().getNative()).getX();
-		int y = ((GLWindow) this.app.getSurface().getNative()).getY();
+		int x = BasicGame.getJFrame(this.app.getSurface()).getX();
+		int y = BasicGame.getJFrame(this.app.getSurface()).getY();
 
 		// Move Real Mouse to Center of Screen
 		this.robot.mouseMove(this.app.width / 2 + x, this.app.height / 2 + y);
@@ -55,8 +57,8 @@ public class FirstPersonCamera extends GameObject {
 			this.app.noCursor();
 
 			// Get Real Mouse Position
-			int x = ((GLWindow) this.app.getSurface().getNative()).getX();
-			int y = ((GLWindow) this.app.getSurface().getNative()).getY();
+			int x = BasicGame.getJFrame(this.app.getSurface()).getX();
+			int y = BasicGame.getJFrame(this.app.getSurface()).getY();
 
 			// Compare Real Mouse to Fake Mouse
 			int deltaX = this.mouse.x - (this.app.width / 2 + x);
@@ -71,12 +73,18 @@ public class FirstPersonCamera extends GameObject {
 		}
 
 		// Checks to Make sure Player cannot break the camera
-		if (this.position.x > Float.MAX_VALUE) this.position.set(Float.MAX_VALUE, this.position.y, this.position.z);
-		if (this.position.x < -Float.MAX_VALUE) this.position.set(-Float.MAX_VALUE, this.position.y, this.position.z);
-		if (this.position.y > Float.MAX_VALUE) this.position.set(this.position.x, Float.MAX_VALUE, this.position.z);
-		if (this.position.y < -Float.MAX_VALUE) this.position.set(this.position.x, -Float.MAX_VALUE, this.position.z);
-		if (this.position.z > Float.MAX_VALUE) this.position.set(this.position.x, this.position.y, Float.MAX_VALUE);
-		if (this.position.z < -Float.MAX_VALUE) this.position.set(this.position.x, this.position.y, -Float.MAX_VALUE);
+		if (this.position.x > Float.MAX_VALUE)
+			this.position.set(Float.MAX_VALUE, this.position.y, this.position.z);
+		if (this.position.x < -Float.MAX_VALUE)
+			this.position.set(-Float.MAX_VALUE, this.position.y, this.position.z);
+		if (this.position.y > Float.MAX_VALUE)
+			this.position.set(this.position.x, Float.MAX_VALUE, this.position.z);
+		if (this.position.y < -Float.MAX_VALUE)
+			this.position.set(this.position.x, -Float.MAX_VALUE, this.position.z);
+		if (this.position.z > Float.MAX_VALUE)
+			this.position.set(this.position.x, this.position.y, Float.MAX_VALUE);
+		if (this.position.z < -Float.MAX_VALUE)
+			this.position.set(this.position.x, this.position.y, -Float.MAX_VALUE);
 
 		// Adjust the Center
 		this.center = PVector.add(this.position, this.player.look);

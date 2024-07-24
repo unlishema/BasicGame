@@ -4,6 +4,7 @@ import org.unlishema.simpleKeyHandler.SimpleKeyHandler;
 import org.unlishema.simpleKeyHandler.SimpleKeyListener;
 
 import processing.core.PApplet;
+import processing.core.PSurface;
 import processing.core.PVector;
 import processing.opengl.PGraphicsOpenGL;
 
@@ -173,6 +174,10 @@ public class BasicGame extends PApplet {
 			this.world.player.mousePressed();
 		else
 			this.gui.mousePressed(this.mouseX, this.mouseY);
+	}
+
+	public static final javax.swing.JFrame getJFrame(final PSurface surf) {
+		return (javax.swing.JFrame) ((processing.awt.PSurfaceAWT.SmoothCanvas) surf.getNative()).getFrame();
 	}
 
 	public static void main(String[] args) {
